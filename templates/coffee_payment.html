@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <h2 style="text-align: center;">Buy a Cold Coffee</h2>
+    <div class="container" style="width: 40%; background-color: #40e3ac;border-radius: 5px; padding: 30px;">
+        <form  method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+        {{form.name}}
+            </div>
+            <div class="form-group">
+        {{form.amount}}
+         </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Buy Now</button>
+        </div>
+        </form>
+
+        <br/>
+
+        {% if payment %}
+            <form action="{% url 'payment-status' %}" method="POST">
+                {% csrf_token %}
+                <script
+                        src="https://checkout.razorpay.com/v1/checkout.js"
+                        data-key="rzp_test_5mqNYrna5GtgXH"
+                        data-amount="{{ payment.amount }}"
+                        data-currency="{{ payment.currency }}"
+                        data-order_id="{{ payment.id }}"
+                        data-buttontext="Pay with Razorpay"
+                        data-name="Cold Coffee Shop"
+                        data-description="Have a Cold Coffee that will make your mood fresh!"
+                        data-prefill.name="{{ payment.name }}"
+                        data-prefill.email="darpankario@gmail.com"
+                        data-theme.color="#F37254"
+                ></script>
+                <input type="hidden" custom="Hidden Element" name="hidden">
+            </form>
+        {% endif %}
+    </div>
+{% endblock %}
